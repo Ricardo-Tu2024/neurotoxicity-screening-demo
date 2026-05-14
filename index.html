@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>线虫神经毒性筛查系统 - NMI</title>
+    <script src="prefs.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+    <div class="app-shell">
+        <div class="global-bar">
+            <div class="container global-bar__inner">
+<a
+                    href="settings.html"
+                    class="settings-btn"
+                    data-i18n-title="settings"
+                    data-i18n-aria="settings"
+                    aria-label="设置"
+                >
+                    <svg class="settings-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path
+                            d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                        />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <header class="site-header">
+            <div class="container header-inner">
+                <p class="eyebrow" data-i18n="header_eyebrow">NMI · 神经形态学分析</p>
+                <h1 data-i18n="home_title">线虫神经毒性筛查系统</h1>
+                <p class="subtitle" data-i18n="home_subtitle">基于秀丽隐杆线虫（C. elegans）多巴胺能神经元的高通量神经毒性筛查</p>
+            </div>
+        </header>
+
+        <main class="container main-content">
+            <section class="intro card section-card reveal-on-scroll" aria-labelledby="intro-heading">
+                <div class="intro-block__glow" aria-hidden="true"></div>
+                <div class="section-head section-head--intro">
+                    <h2 id="intro-heading" data-i18n="intro_title">系统简介</h2>
+                    <p class="section-lead" data-i18n="intro_lead">自监督学习基础模型，对多巴胺能神经元进行高通量形态学分析，可检测 10 项关键指标。</p>
+                </div>
+                <p class="intro-paragraph" data-i18n="intro_p">本系统采用自监督学习的基础模型，对秀丽隐杆线虫（C. elegans）多巴胺能神经元进行高通量形态学分析，可检测以下关键指标：</p>
+                <div class="metrics-grid metrics-grid--intro">
+                    <div class="metric-group metric-group--bead reveal-on-scroll reveal-scale" data-reveal-delay="100">
+                        <div class="metric-group__head">
+                            <span class="metric-group__icon" aria-hidden="true"><svg class="metric-group__svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="19" r="2.3" /><circle cx="13" cy="17" r="2.3" /><circle cx="19" cy="19" r="2.3" /><circle cx="25" cy="16" r="1.8" /></svg></span>
+                            <h3 data-i18n="mg_bead">串珠分析</h3>
+                        </div>
+                        <ul class="metric-group__list">
+                            <li data-i18n="in_b1"><span class="term-tooltip" data-term="bead">串珠</span>数量</li>
+                            <li data-i18n="in_b2">平均<span class="term-tooltip" data-term="bead">串珠</span>大小</li>
+                        </ul>
+                    </div>
+                    <div class="metric-group metric-group--cell reveal-on-scroll reveal-scale" data-reveal-delay="200">
+                        <div class="metric-group__head">
+                            <span class="metric-group__icon" aria-hidden="true"><svg class="metric-group__svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="16" r="4.5" /><circle cx="22" cy="16" r="3.2" /><path d="M7 16H7.5M25 16h.5" /></svg></span>
+                            <h3 data-i18n="mg_cell">细胞体分析</h3>
+                        </div>
+                        <ul class="metric-group__list">
+                            <li data-i18n="in_c1"><span class="term-tooltip" data-term="cep">CEP</span>数量</li>
+                            <li data-i18n="in_c2">平均<span class="term-tooltip" data-term="cep">CEP</span>大小</li>
+                            <li data-i18n="in_c3"><span class="term-tooltip" data-term="ade">ADE</span>数量</li>
+                            <li data-i18n="in_c4">平均<span class="term-tooltip" data-term="ade">ADE</span>大小</li>
+                        </ul>
+                    </div>
+                    <div class="metric-group metric-group--dend reveal-on-scroll reveal-scale" data-reveal-delay="300">
+                        <div class="metric-group__head">
+                            <span class="metric-group__icon" aria-hidden="true"><svg class="metric-group__svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20c6-1 7-4 9-6s4-3 7-2 5 0 7-2" /><circle cx="4" cy="20" r="2" fill="currentColor" stroke="none" /><circle cx="21" cy="10" r="1.6" fill="currentColor" stroke="none" /><circle cx="28" cy="8" r="1.4" fill="currentColor" stroke="none" /></svg></span>
+                            <h3 data-i18n="mg_dend">树突分析</h3>
+                        </div>
+                        <ul class="metric-group__list">
+                            <li data-i18n="in_d1"><span class="term-tooltip" data-term="dendrite">树突</span>长度</li>
+                        </ul>
+                    </div>
+                    <div class="metric-group metric-group--morph reveal-on-scroll reveal-scale" data-reveal-delay="400">
+                        <div class="metric-group__head">
+                            <span class="metric-group__icon" aria-hidden="true"><svg class="metric-group__svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h3l2-4 3 2 2-3 3 1" /><circle cx="8" cy="20" r="1.3" fill="currentColor" stroke="none" /><path d="M6 9l1 1M14 6l-1 2" /></svg></span>
+                            <h3 data-i18n="mg_morph">形态异常</h3>
+                        </div>
+                        <ul class="metric-group__list">
+                            <li data-i18n="in_m1">断裂</li>
+                            <li data-i18n="in_m2">增生</li>
+                            <li data-i18n="in_m3">异常弯曲</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bsr-section card section-card reveal-on-scroll" aria-labelledby="bsr-heading">
+                <div class="section-head">
+                    <h2 id="bsr-heading" data-i18n="bsr_title">BSR 评分系统</h2>
+                    <p class="section-lead" data-i18n="bsr_lead">基础慢反应（Basal Slowing Response）是评估线虫多巴胺能神经元功能的金标准行为学指标。</p>
+                </div>
+                <div class="bsr-content">
+                    <div class="bsr-explanation">
+                        <h3 data-i18n="bsr_what_title">什么是 BSR？</h3>
+                        <p data-i18n="bsr_what_desc">当线虫遇到食物时，会通过多巴胺能神经元调控运动速度，从快速移动转为缓慢爬行。这种行为反应称为 BSR，是评估多巴胺神经系统功能完整性的关键指标。</p>
+                    </div>
+                    <div class="bsr-metrics-wrap">
+                        <div class="bsr-metric-card">
+                            <div class="bsr-metric-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                </svg>
+                            </div>
+                            <h4 data-i18n="bsr_metric1_title">On/Off 频率比</h4>
+                            <p data-i18n="bsr_metric1_desc">食物上与食物外的运动频率比值，反映神经元响应能力</p>
+                        </div>
+                        <div class="bsr-metric-card">
+                            <div class="bsr-metric-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                            </div>
+                            <h4 data-i18n="bsr_metric2_title">频率差异</h4>
+                            <p data-i18n="bsr_metric2_desc">On-Off 频率的绝对差值，量化行为变化幅度</p>
+                        </div>
+                        <div class="bsr-metric-card">
+                            <div class="bsr-metric-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                                </svg>
+                            </div>
+                            <h4 data-i18n="bsr_metric3_title">响应状态</h4>
+                            <p data-i18n="bsr_metric3_desc">二元分类（0/1），判断是否产生正常减速反应</p>
+                        </div>
+                    </div>
+                    <div class="bsr-correlation">
+                        <h3 data-i18n="bsr_corr_title">形态学与行为学关联</h3>
+                        <p data-i18n="bsr_corr_desc">本系统通过多模态深度学习框架，将神经元形态学特征（串珠、细胞体、树突等）与 BSR 行为学评分相关联，实现从结构到功能的预测，为神经毒性评估提供可解释的 AI 工具。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="demo-section card section-card reveal-on-scroll">
+                <div class="section-head">
+                    <h2 data-i18n="demo_title">分析演示</h2>
+                    <p class="section-lead" data-i18n="demo_lead">选择样本与任务后进入工作区：左侧为原图，右侧为预处理与当前任务结果（演示数据）。</p>
+                </div>
+
+                <div class="demo-start-form">
+                    <div class="field-block field-block--sample">
+                        <div class="field-block-head">
+                            <span class="field-label" id="sample-select-label" data-i18n="pick_sample">选择样本</span>
+                            <span class="field-hint" data-i18n="hint_sample">缩略图为该样本原始图像预览</span>
+                        </div>
+                        <div
+                            class="sample-picker"
+                            id="sample-picker"
+                            role="radiogroup"
+                            aria-labelledby="sample-select-label"
+                        ></div>
+                        <input type="hidden" id="sample-index" name="sample" value="0" />
+                    </div>
+                    <div class="field-block field-block--task">
+                        <div class="field-block-head">
+                            <span class="field-label" id="task-select-label" data-i18n="pick_task">分析任务</span>
+                            <span class="field-hint" data-i18n="hint_task">选择一项后将进入对应该模块的结果页面</span>
+                        </div>
+                        <div
+                            class="task-picker"
+                            id="task-picker"
+                            role="radiogroup"
+                            aria-labelledby="task-select-label"
+                        >
+                            <button
+                                type="button"
+                                class="task-card task-card--selected"
+                                role="radio"
+                                aria-checked="true"
+                                data-task-id="bead"
+                                data-i18n-aria="task_bead_l"
+                                aria-label="串珠分析"
+                            >
+                                <span class="task-card__inner"
+                                    ><span class="task-card__icon" aria-hidden="true"
+                                        ><svg class="task-card__svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="19" r="2.3" /><circle cx="13" cy="17" r="2.3" /><circle cx="19" cy="19" r="2.3" /><circle cx="25" cy="16" r="1.8" /></svg></span
+                                    ><span class="task-card__body"
+                                        ><span class="task-card__label" data-i18n="task_bead_l">串珠分析</span
+                                        ><span class="task-card__blurb" data-i18n="task_bead_b">珠状结构数量与大小</span></span
+                                    ></span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="task-card"
+                                role="radio"
+                                aria-checked="false"
+                                data-task-id="cellbody"
+                                data-i18n-aria="task_cell_l"
+                                aria-label="细胞体分析"
+                            >
+                                <span class="task-card__inner"
+                                    ><span class="task-card__icon" aria-hidden="true"
+                                        ><svg class="task-card__svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="15" r="4.2" /><circle cx="21" cy="13" r="3.2" /></svg></span
+                                    ><span class="task-card__body"
+                                        ><span class="task-card__label" data-i18n="task_cell_l">细胞体分析</span
+                                        ><span class="task-card__blurb" data-i18n="task_cell_b">CEP、ADE 细胞体</span></span
+                                    ></span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="task-card"
+                                role="radio"
+                                aria-checked="false"
+                                data-task-id="dendrite"
+                                data-i18n-aria="task_dend_l"
+                                aria-label="树突分析"
+                            >
+                                <span class="task-card__inner"
+                                    ><span class="task-card__icon" aria-hidden="true"
+                                        ><svg class="task-card__svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 25c0-3 1.5-3.5 2.5-1.5l2.5 3.5c.8 1.2 2.2 1 3-.3l1.5-2.2c.7-1 2-1 2.8.3l1.2 1.2" /><circle cx="7" cy="25" r="1.4" fill="currentColor" stroke="none" /></svg></span
+                                    ><span class="task-card__body"
+                                        ><span class="task-card__label" data-i18n="task_dend_l">树突分析</span
+                                        ><span class="task-card__blurb" data-i18n="task_dend_b">树突长度</span></span
+                                    ></span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="task-card"
+                                role="radio"
+                                aria-checked="false"
+                                data-task-id="morphology"
+                                data-i18n-aria="task_morph_l"
+                                aria-label="形态异常分析"
+                            >
+                                <span class="task-card__inner"
+                                    ><span class="task-card__icon" aria-hidden="true"
+                                        ><svg class="task-card__svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 5 L28 25 H4 L16 5z" /><line x1="16" y1="12" x2="16" y2="19" stroke-width="2" /><circle cx="16" cy="22" r="1" fill="currentColor" stroke="none" /></svg></span
+                                    ><span class="task-card__body"
+                                        ><span class="task-card__label" data-i18n="task_morph_l">形态异常分析</span
+                                        ><span class="task-card__blurb" data-i18n="task_morph_b">断裂、增生、弯曲</span></span
+                                    ></span
+                                >
+                            </button>
+                        </div>
+                        <input type="hidden" id="task-id" name="task" value="bead" />
+                    </div>
+                    <div class="demo-form-actions">
+                        <button type="button" class="btn btn-primary btn-lg" id="start-btn" data-i18n="start">开始</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container">
+                <p data-i18n="footer">基于论文：High-throughput neurotoxicity screening in C. elegans dopaminergic neurons with self-supervised learning</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="i18n.js?v=10"></script>
+    <script src="tooltip.js?v=2"></script>
+    <script src="scroll-reveal.js?v=1"></script>
+    <script src="quick-start-guide.js?v=4"></script>
+    <script src="data.js?v=10"></script>
+    <script src="home.js?v=10"></script>
+</body>
+</html>

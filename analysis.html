@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>分析工作区 - NMI</title>
+    <script src="prefs.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=4">
+</head>
+<body>
+    <div class="app-shell app-shell--workspace">
+        <header class="workspace-topbar">
+            <div class="workspace-topbar-inner">
+                <a href="index.html" class="back-link" data-i18n="back">返回</a>
+                <div class="workspace-title-block">
+                    <h1 class="workspace-title" data-i18n="workspace_title">分析工作区</h1>
+                    <div class="workspace-switchers">
+                        <div class="workspace-switcher">
+                            <label for="sample-switcher" class="switcher-label" data-i18n="sample_label">样本</label>
+                            <select id="sample-switcher" class="switcher-select">
+                                <!-- Options populated by JS -->
+                            </select>
+                        </div>
+                        <div class="workspace-switcher">
+                            <label for="task-switcher" class="switcher-label" data-i18n="task_label">任务</label>
+                            <select id="task-switcher" class="switcher-select">
+                                <!-- Options populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <a
+                    href="settings.html"
+                    class="settings-btn settings-btn--toolbar"
+                    data-i18n-title="settings"
+                    data-i18n-aria="settings"
+                    aria-label="设置"
+                >
+                    <svg class="settings-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path
+                            d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                        />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                </a>
+            </div>
+        </header>
+
+        <main class="workspace-main">
+            <div class="container workspace-layout">
+                <div class="workspace-layout-inner">
+                <div class="workspace-split">
+                    <section class="workspace-pane workspace-pane--left" aria-label="" data-i18n-aria="left_pane" id="left-pane-a11y">
+                        <h2 class="pane-title" data-i18n="left_pane">原始图像</h2>
+                        <div class="image-container workspace-image-container workspace-canvas">
+                            <img id="workspace-original" src="" data-i18n-alt="orig_img_alt" alt="原始线虫神经元图像" />
+                        </div>
+                    </section>
+
+                    <section class="workspace-pane workspace-pane--right" id="right-pane-a11y" data-i18n-aria="result_pane" aria-label="">
+                        <h2 class="pane-title" id="right-pane-heading" data-i18n="result_heading">结果</h2>
+                        <div class="workspace-right-body">
+                            <div class="right-panel right-panel--empty" id="right-empty" role="status">
+                                <p class="right-placeholder-text" data-i18n="right_placeholder">此区域为分析结果。请先点击「预处理」查看预处理图，再点击「生成结果」查看当前任务输出。</p>
+                            </div>
+
+                            <div class="right-panel right-panel--preprocessed" id="right-preprocessed" hidden>
+                                <div class="preprocessed-viewer" role="region" data-i18n-aria="pre_region" aria-label="">
+                                    <button type="button" class="pager-btn pager-prev" id="preprocessed-prev" aria-controls="preprocessed-image" data-i18n-aria="pager_prev" aria-label="上一页">
+                                        <span class="pager-icon" aria-hidden="true">‹</span>
+                                    </button>
+                                    <div class="preprocessed-frame">
+                                        <div class="image-container preprocessed-image-wrap workspace-canvas">
+                                            <img id="preprocessed-image" src="" data-i18n-alt="pre_alt" alt="预处理后的图像" />
+                                        </div>
+                                        <div class="pager-bar">
+                                            <p class="stage-description" id="preprocessed-caption"></p>
+                                            <span class="pager-indicator" id="preprocessed-indicator" aria-live="polite">1 / 1</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="pager-btn pager-next" id="preprocessed-next" aria-controls="preprocessed-image" data-i18n-aria="pager_next" aria-label="下一页">
+                                        <span class="pager-icon" aria-hidden="true">›</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="right-panel right-panel--result" id="right-result" hidden>
+                                <div class="result-canvas-block">
+                                <div class="image-container workspace-image-container result-canvas workspace-canvas">
+                                    <img id="result-image" src="" data-i18n-alt="result_img_alt" alt="任务结果图像" />
+                                </div>
+                                <div class="result-metrics" id="result-metrics">
+                                </div>
+                                <div class="result-chart-wrap" id="result-chart-wrap">
+                                    <div class="result-chart-container" id="result-chart-container"></div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="workspace-toolbar">
+                    <div class="workspace-toolbar__actions">
+                        <button type="button" class="btn btn-primary" id="action-btn">预处理</button>
+                        <button type="button" class="btn btn-secondary" id="back-step-btn" hidden>Previous step</button>
+                        <button type="button" class="btn btn-secondary export-btn" id="export-btn" hidden>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Export CSV
+                        </button>
+                    </div>
+                    <div class="workspace-shortcuts-hint">
+                        <span>Space/Enter: 执行</span>
+                        <span>Esc: 返回</span>
+                        <span>←→: 翻页</span>
+                        <span>1-8: 切换样本</span>
+                        <span>E: 导出</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="i18n.js?v=11"></script>
+    <script src="tooltip.js"></script>
+    <script src="image-zoom.js"></script>
+    <script src="chart-viz.js"></script>
+    <script src="data.js?v=10"></script>
+    <script src="analysis.js?v=12"></script>
+</body>
+</html>
