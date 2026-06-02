@@ -65,7 +65,7 @@
                 '<span class="sample-card__thumb-wrap">' +
                 '<img class="sample-card__thumb" src="' +
                 String(s.original).replace(/"/g, "&quot;") +
-                '" alt="" loading="lazy" width="200" height="150" />' +
+                '" alt="" loading="lazy" decoding="async" width="200" height="150" />' +
                 '<span class="sample-card__badge" aria-hidden="true">#' +
                 num +
                 "</span>" +

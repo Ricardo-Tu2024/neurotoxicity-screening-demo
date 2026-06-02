@@ -8,7 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=7">
+    <link rel="preload" as="image" href="images/original/sample1.webp" fetchpriority="high">
+    <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
     <div class="app-shell">
@@ -49,7 +50,7 @@
                 <div class="metrics-grid metrics-grid--intro">
                     <div class="metric-group metric-group--bead reveal-on-scroll reveal-scale" data-reveal-delay="100">
                         <div class="metric-group__head">
-                            <span class="metric-group__icon metric-group__icon--preview" aria-hidden="true"><img class="metric-group__thumb" src="images/results/sample1_bead.webp" alt="" loading="lazy" /></span>
+                            <span class="metric-group__icon metric-group__icon--preview" aria-hidden="true"><img class="metric-group__thumb" src="images/results/sample1_bead.webp" alt="" loading="lazy" decoding="async" /></span>
                             <h3 data-i18n="mg_bead">串珠分析</h3>
                         </div>
                         <ul class="metric-group__list">
@@ -59,7 +60,7 @@
                     </div>
                     <div class="metric-group metric-group--cell reveal-on-scroll reveal-scale" data-reveal-delay="200">
                         <div class="metric-group__head">
-                            <span class="metric-group__icon metric-group__icon--preview" aria-hidden="true"><img class="metric-group__thumb" src="images/results/sample1_cellbody.webp" alt="" loading="lazy" /></span>
+                            <span class="metric-group__icon metric-group__icon--preview" aria-hidden="true"><img class="metric-group__thumb" src="images/results/sample1_cellbody.webp" alt="" loading="lazy" decoding="async" /></span>
                             <h3 data-i18n="mg_cell">细胞体分析</h3>
                         </div>
                         <ul class="metric-group__list">
@@ -71,7 +72,7 @@
                     </div>
                     <div class="metric-group metric-group--dend reveal-on-scroll reveal-scale" data-reveal-delay="300">
                         <div class="metric-group__head">
-                            <span class="metric-group__icon metric-group__icon--preview" aria-hidden="true"><img class="metric-group__thumb" src="images/results/sample1_dendrite.webp" alt="" loading="lazy" /></span>
+                            <span class="metric-group__icon metric-group__icon--preview" aria-hidden="true"><img class="metric-group__thumb" src="images/results/sample1_dendrite.webp" alt="" loading="lazy" decoding="async" /></span>
                             <h3 data-i18n="mg_dend">树突分析</h3>
                         </div>
                         <ul class="metric-group__list">
@@ -80,7 +81,7 @@
                     </div>
                     <div class="metric-group metric-group--morph reveal-on-scroll reveal-scale" data-reveal-delay="400">
                         <div class="metric-group__head">
-                            <span class="metric-group__icon metric-group__icon--preview" aria-hidden="true"><img class="metric-group__thumb" src="images/results/sample1_morphology.webp" alt="" loading="lazy" /></span>
+                            <span class="metric-group__icon metric-group__icon--preview" aria-hidden="true"><img class="metric-group__thumb" src="images/results/sample1_morphology.webp" alt="" loading="lazy" decoding="async" /></span>
                             <h3 data-i18n="mg_morph">形态异常</h3>
                         </div>
                         <ul class="metric-group__list">
@@ -180,7 +181,7 @@
                             >
                                 <span class="task-card__inner"
                                     ><span class="task-card__icon task-card__icon--preview" aria-hidden="true"
-                                        ><img class="task-card__thumb" src="images/results/sample1_bead.webp" alt="" loading="lazy" /></span
+                                        ><img class="task-card__thumb" src="images/results/sample1_bead.webp" alt="" loading="lazy" decoding="async" /></span
                                     ><span class="task-card__body"
                                         ><span class="task-card__label" data-i18n="task_bead_l">串珠分析</span
                                         ><span class="task-card__blurb" data-i18n="task_bead_b">珠状结构数量与大小</span></span
@@ -198,7 +199,7 @@
                             >
                                 <span class="task-card__inner"
                                     ><span class="task-card__icon task-card__icon--preview" aria-hidden="true"
-                                        ><img class="task-card__thumb" src="images/results/sample1_cellbody.webp" alt="" loading="lazy" /></span
+                                        ><img class="task-card__thumb" src="images/results/sample1_cellbody.webp" alt="" loading="lazy" decoding="async" /></span
                                     ><span class="task-card__body"
                                         ><span class="task-card__label" data-i18n="task_cell_l">细胞体分析</span
                                         ><span class="task-card__blurb" data-i18n="task_cell_b">CEP、ADE 细胞体</span></span
@@ -216,7 +217,7 @@
                             >
                                 <span class="task-card__inner"
                                     ><span class="task-card__icon task-card__icon--preview" aria-hidden="true"
-                                        ><img class="task-card__thumb" src="images/results/sample1_dendrite.webp" alt="" loading="lazy" /></span
+                                        ><img class="task-card__thumb" src="images/results/sample1_dendrite.webp" alt="" loading="lazy" decoding="async" /></span
                                     ><span class="task-card__body"
                                         ><span class="task-card__label" data-i18n="task_dend_l">树突分析</span
                                         ><span class="task-card__blurb" data-i18n="task_dend_b">树突长度</span></span
@@ -234,7 +235,7 @@
                             >
                                 <span class="task-card__inner"
                                     ><span class="task-card__icon task-card__icon--preview" aria-hidden="true"
-                                        ><img class="task-card__thumb" src="images/results/sample1_morphology.webp" alt="" loading="lazy" /></span
+                                        ><img class="task-card__thumb" src="images/results/sample1_morphology.webp" alt="" loading="lazy" decoding="async" /></span
                                     ><span class="task-card__body"
                                         ><span class="task-card__label" data-i18n="task_morph_l">形态异常分析</span
                                         ><span class="task-card__blurb" data-i18n="task_morph_b">断裂、增生、弯曲</span></span
@@ -263,6 +264,6 @@
     <script src="scroll-reveal.js?v=1"></script>
     <script src="quick-start-guide.js?v=6"></script>
     <script src="data.js?v=14"></script>
-    <script src="home.js?v=10"></script>
+    <script src="home.js?v=11"></script>
 </body>
 </html>
