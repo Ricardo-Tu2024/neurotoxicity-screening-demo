@@ -1,160 +1,65 @@
-# 线虫神经毒性筛查系统 Demo
+# C. elegans Neurotoxicity Screening Demo
 
-基于论文《High-throughput neurotoxicity screening in *Caenorhabditis elegans* dopaminergic neurons with self-supervised learning》的演示网页。
+A web-based demo for high-throughput morphological analysis of *C. elegans* dopaminergic neurons, based on self-supervised learning.
 
-## 功能特点
+## Features
 
-本系统展示了对秀丽隐杆线虫多巴胺能神经元的高通量形态学分析，可检测10项关键指标：
+Four analysis modules covering 10 key metrics:
 
-### 四大分析模块
+1. **Bead Analysis** — bead count, mean bead size
+2. **Soma Analysis** — CEP count & size, ADE count & size
+3. **Dendrite Analysis** — dendrite length
+4. **Morphology Analysis** — breakage, overgrowth, abnormal bending
 
-1. **串珠分析**
-   - 串珠数量
-   - 平均串珠大小
+Also includes a BSR (Basal Slowing Response) scoring overview linking morphology to behavioral function.
 
-2. **细胞体分析**
-   - CEP数量
-   - 平均CEP大小
-   - ADE数量
-   - 平均ADE大小
+## Usage
 
-3. **树突分析**
-   - 树突长度
+1. Select a sample (8 demo samples available)
+2. Click **Preprocess** to view the 3-step preprocessing pipeline (crop → rotate → HE stain)
+3. Click **Generate** to see the task result with metrics and overlay visualization
 
-4. **形态异常分析**
-   - 断裂检测
-   - 增生检测
-   - 异常弯曲检测
+Supports Chinese / English i18n and dark / light theme.
 
-## 使用说明
-
-1. 选择样本（提供3个示例样本）
-2. 点击"预处理"按钮查看预处理后的图像
-3. 点击"分析"按钮查看完整的分析结果和指标
-
-## 项目结构
+## Project Structure
 
 ```
-Demo/
-├── index.html          # 主页面
-├── styles.css          # 样式文件
-├── script.js           # 交互逻辑
-├── images/             # 图片资源
-│   ├── original/       # 原始图片
-│   ├── preprocessed/   # 预处理后的图片
-│   └── results/        # 分析结果图片
-└── README.md           # 说明文档
+├── index.html              # Landing page
+├── analysis.html           # Analysis workspace
+├── settings.html           # Theme & language settings
+├── styles.css              # Stylesheet
+├── prefs.js                # Theme & language initialization
+├── i18n.js                 # Chinese / English strings
+├── data.js                 # Sample data, metrics, task metadata
+├── home.js                 # Landing page logic
+├── analysis.js             # Workspace logic (preprocess, result, export)
+├── quick-start-guide.js    # First-visit guided tour
+├── tooltip.js              # Terminology tooltips
+├── image-zoom.js            # Pan & zoom for workspace images
+├── scroll-reveal.js        # Scroll-triggered animations
+├── images/
+│   ├── original/           # Raw neuron images (8 samples)
+│   ├── preprocessed/       # Crop, rotate, HE stain outputs
+│   └── results/            # Analysis result overlays (4 tasks × 8 samples)
+└── README.md
 ```
 
-## 部署到 GitHub Pages
+## Tech Stack
 
-### 方法一：通过 GitHub 网页界面
+- HTML5, CSS3 (responsive, custom properties, animations)
+- Vanilla JavaScript (no framework)
+- WebP images for optimized loading
 
-1. 在 GitHub 上创建新仓库
-2. 上传所有文件到仓库
-3. 进入仓库的 Settings > Pages
-4. 在 Source 下选择 `main` 分支
-5. 点击 Save，等待部署完成
-6. 访问 `https://你的用户名.github.io/仓库名/`
+## Browser Support
 
-### 方法二：通过命令行
-
-```bash
-# 初始化 git 仓库
-cd D:\CursorCode\Demo
-git init
-
-# 添加所有文件
-git add .
-
-# 提交
-git commit -m "Initial commit: Neurotoxicity screening demo"
-
-# 添加远程仓库（替换为你的仓库地址）
-git remote add origin https://github.com/你的用户名/仓库名.git
-
-# 推送到 GitHub
-git branch -M main
-git push -u origin main
-```
-
-然后在 GitHub 仓库设置中启用 GitHub Pages。
-
-## 准备图片资源
-
-### 当前状态
-
-- ✅ 原始图片：已从 `D:\CursorCode\Dataset\imagesTr` 复制了3张样本图片
-- ⚠️ 预处理图片：需要手动添加
-- ⚠️ 分析结果图片：需要手动添加
-
-### 需要添加的图片
-
-请将以下图片放入对应目录：
-
-#### 预处理图片（`images/preprocessed/`）
-- `sample1_preprocessed.png`
-- `sample2_preprocessed.png`
-- `sample3_preprocessed.png`
-
-#### 分析结果图片（`images/results/`）
-
-每个样本需要4张结果图：
-
-**样本1：**
-- `sample1_bead.png` - 串珠分析结果
-- `sample1_cellbody.png` - 细胞体分析结果
-- `sample1_dendrite.png` - 树突分析结果
-- `sample1_morphology.png` - 形态异常分析结果
-
-**样本2：**
-- `sample2_bead.png`
-- `sample2_cellbody.png`
-- `sample2_dendrite.png`
-- `sample2_morphology.png`
-
-**样本3：**
-- `sample3_bead.png`
-- `sample3_cellbody.png`
-- `sample3_dendrite.png`
-- `sample3_morphology.png`
-
-### 生成分析结果图片
-
-可以使用 `D:\CursorCode\NeuroSentinel\neorual-analysis` 中的脚本生成分析结果：
-
-```bash
-cd D:\CursorCode\NeuroSentinel\neorual-analysis
-
-# 串珠分析
-python visualize_bead_segmentation.py --img <图像路径> --out-dir <输出目录>
-
-# 细胞体分析
-python visualize_Cellbody_instance_segmentation.py --img <图像路径> --out-dir <输出目录>
-
-# 树突分析
-python visualize_Dendrite_detection.py --img <图像路径> --out-dir <输出目录>
-
-# 形态分类
-python inference_vit_classification.py --img <图像路径> --out-dir <输出目录>
-```
-
-## 技术栈
-
-- HTML5
-- CSS3（响应式设计、渐变、动画）
-- 原生 JavaScript（无依赖）
-
-## 浏览器兼容性
-
-- Chrome/Edge 90+
+- Chrome / Edge 90+
 - Firefox 88+
 - Safari 14+
 
-## 许可证
+## License
 
-本项目仅用于学术演示目的。
+For academic demonstration purposes only.
 
-## 参考文献
+## Reference
 
-Lv Shenchong, Sun Yutao, Tu Zijian, et al. High-throughput neurotoxicity screening in *Caenorhabditis elegans* dopaminergic neurons with self-supervised learning.
+Lv Shenchong, Sun Yutao, Tu Zijian, et al. *High-throughput neurotoxicity screening in Caenorhabditis elegans dopaminergic neurons with self-supervised learning.*
