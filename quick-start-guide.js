@@ -135,10 +135,10 @@
                     <span class="guide-tooltip__step-count">${currentStep + 1} / ${steps.length}</span>
                 </div>
                 <div class="guide-tooltip__actions">
-                    ${currentStep > 0 ? `<button type="button" class="guide-tooltip__btn--icon" aria-label="${lang === 'zh' ? '上一步' : 'Previous'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:1rem;height:1rem;"><path d="M15 18l-6-6 6-6"/></svg></button>` : ''}
+                    ${currentStep > 0 ? `<button type="button" class="guide-tooltip__btn--icon" data-guide-action="prev" aria-label="${lang === 'zh' ? '上一步' : 'Previous'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:1rem;height:1rem;"><path d="M15 18l-6-6 6-6"/></svg></button>` : ''}
                     ${currentStep < steps.length - 1
-                        ? `<button type="button" class="guide-tooltip__btn--icon" aria-label="${lang === 'zh' ? '下一步' : 'Next'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:1rem;height:1rem;"><path d="M9 18l-6-6-6-6"/></svg></button>`
-                        : `<button type="button" class="guide-tooltip__btn guide-tooltip__btn-primary">${lang === 'zh' ? '完成' : 'Finish'}</button>`
+                        ? `<button type="button" class="guide-tooltip__btn--icon" data-guide-action="next" aria-label="${lang === 'zh' ? '下一步' : 'Next'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:1rem;height:1rem;"><path d="M9 18l6-6-6-6"/></svg></button>`
+                        : `<button type="button" class="guide-tooltip__btn guide-tooltip__btn-primary" data-guide-action="finish">${lang === 'zh' ? '完成' : 'Finish'}</button>`
                     }
                 </div>
             </div>
@@ -147,13 +147,28 @@
         document.body.appendChild(tooltip);
 
         // 绑定事件
-        tooltip.querySelector('.guide-tooltip__close').addEventListener('click', skipGuide);
+        tooltip.querySelector('.guide-tooltip__close').addEventListener('click', function(e) {
+            e.stopPropagation();
+            skipGuide();
+        });
 
-        const prevBtn = tooltip.querySelector('.guide-tooltip__btn-secondary');
-        if (prevBtn) prevBtn.addEventListener('click', previousStep);
+        const prevBtn = tooltip.querySelector('[data-guide-action="prev"]');
+        if (prevBtn) prevBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            previousStep();
+        });
 
-        const nextBtn = tooltip.querySelector('.guide-tooltip__btn-primary');
-        if (nextBtn) nextBtn.addEventListener('click', currentStep < steps.length - 1 ? nextStep : finishGuide);
+        const nextBtn = tooltip.querySelector('[data-guide-action="next"]');
+        if (nextBtn) nextBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            nextStep();
+        });
+
+        const finishBtn = tooltip.querySelector('[data-guide-action="finish"]');
+        if (finishBtn) finishBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            finishGuide();
+        });
 
         return tooltip;
     }

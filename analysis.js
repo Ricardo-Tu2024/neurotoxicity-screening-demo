@@ -177,7 +177,6 @@
             resultImage.alt = taskLabel() + t("result_alt_suffix");
             setupImageLoading(resultImage, resultImage.closest(".image-container"));
             renderMetrics(sample.metrics);
-            renderChart(sample.metrics);
         }
 
         syncActionButton();
@@ -217,7 +216,7 @@
 
     function updatePreprocessedSlide() {
         const sample = getSample();
-        const slides = nmiGetPreprocessedSlides(sample);
+        const slides = nmiGetPreprocessedSlides(sample, taskId);
         if (!slides.length) {
             preprocessedImage.removeAttribute("src");
             if (preprocessedCaption) preprocessedCaption.textContent = "";
@@ -240,7 +239,7 @@
 
     function syncPreprocessedPager() {
         const sample = getSample();
-        const slides = nmiGetPreprocessedSlides(sample);
+        const slides = nmiGetPreprocessedSlides(sample, taskId);
         const n = slides.length;
         const viewer = document.querySelector("#right-preprocessed .preprocessed-viewer");
         if (viewer) viewer.classList.toggle("preprocessed-viewer--single", n <= 1);
@@ -258,7 +257,7 @@
 
     function goPreprocessedSlide(delta) {
         const sample = getSample();
-        const slides = nmiGetPreprocessedSlides(sample);
+        const slides = nmiGetPreprocessedSlides(sample, taskId);
         if (slides.length <= 1) return;
         preprocessedSlideIndex = Math.max(0, Math.min(preprocessedSlideIndex + delta, slides.length - 1));
         updatePreprocessedSlide();
@@ -330,14 +329,6 @@
         );
     }
 
-    function renderChart(metrics) {
-        const container = document.getElementById("result-chart-container");
-        if (!container) return;
-        if (window.NMI_Chart && typeof NMI_Chart.renderTaskChart === "function") {
-            NMI_Chart.renderTaskChart(taskId, metrics, container);
-        }
-    }
-
     function exportCSV() {
         const sample = getSample();
         const sampleName = typeof nmiGetSampleName === "function" ? nmiGetSampleName(sample) : (sample.name || "Sample");
@@ -345,17 +336,16 @@
 
         // Build CSV rows
         const rows = [
-            ["指标", "值"],
-            ["串珠数量", m.beadCount],
-            ["平均串珠大小 (px²)", m.beadSize.toFixed(1)],
-            ["CEP 数量", m.cepCount],
-            ["平均 CEP 大小 (px²)", m.cepSize.toFixed(1)],
-            ["ADE 数量", m.adeCount],
-            ["平均 ADE 大小 (px²)", m.adeSize.toFixed(1)],
-            ["树突长度 (px)", m.dendriteLength.toFixed(1)],
-            ["断裂", m.breakStatus],
-            ["增生", m.arborizationStatus],
-            ["异常弯曲", m.bendStatus],
+            [t("m_bead_n"), String(m.beadCount)],
+            [t("m_bead_s"), m.beadSize.toFixed(1) + " px²"],
+            [t("m_cep_n"), String(m.cepCount)],
+            [t("m_cep_s"), m.cepSize.toFixed(1) + " px²"],
+            [t("m_ade_n"), String(m.adeCount)],
+            [t("m_ade_s"), m.adeSize.toFixed(1) + " px²"],
+            [t("m_dend"), m.dendriteLength.toFixed(1) + " px"],
+            [t("m_brk"), NMI_i18n.statusDisplay(m.breakStatus)],
+            [t("m_arb"), NMI_i18n.statusDisplay(m.arborizationStatus)],
+            [t("m_bnd"), NMI_i18n.statusDisplay(m.bendStatus)],
         ];
 
         const csvContent = rows.map(row =>
@@ -378,8 +368,9 @@
     }
 
     function exportAllCSV() {
-        const t = window.NMI_i18n && NMI_i18n.t || (k => k);
-        const rows = [["样本", "串珠数量", "串珠大小", "CEP数量", "CEP大小", "ADE数量", "ADE大小", "树突长度", "断裂", "增生", "异常弯曲"]];
+        const tFn = window.NMI_i18n && NMI_i18n.t || (k => k);
+        const sd = window.NMI_i18n && NMI_i18n.statusDisplay || (s => s);
+        const rows = [[tFn("sample_label"), tFn("m_bead_n"), tFn("m_bead_s"), tFn("m_cep_n"), tFn("m_cep_s"), tFn("m_ade_n"), tFn("m_ade_s"), tFn("m_dend"), tFn("m_brk"), tFn("m_arb"), tFn("m_bnd")]];
 
         NMI_SAMPLES.forEach(function(s) {
             const name = typeof nmiGetSampleName === "function" ? nmiGetSampleName(s) : (s.name || "Sample " + (s.id + 1));
@@ -390,7 +381,7 @@
                 String(m.cepCount), m.cepSize.toFixed(1),
                 String(m.adeCount), m.adeSize.toFixed(1),
                 m.dendriteLength.toFixed(1),
-                m.breakStatus, m.arborizationStatus, m.bendStatus,
+                sd(m.breakStatus), sd(m.arborizationStatus), sd(m.bendStatus),
             ]);
         });
 
