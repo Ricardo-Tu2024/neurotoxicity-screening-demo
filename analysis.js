@@ -154,6 +154,12 @@
      * @param options {{ preservePreSlide?: boolean } | undefined} 为 true 时进入预处理阶段不重置翻页索引（用于从 session 恢复或返回）
      */
     function setPhase(next, options) {
+        // BSR has no preprocessing slides — jump directly to result
+        if (taskId === "bsr" && next === "preprocessed") {
+            setPhase("result", options);
+            return;
+        }
+
         var preservePreSlide = options && options.preservePreSlide;
         phase = next;
         const showEmpty = next === "empty";
@@ -170,22 +176,145 @@
             }
             updatePreprocessedSlide();
         }
+        // Restore result canvas visibility (hidden by BSR view)
+        var resultCanvas = document.querySelector(".result-canvas");
+        if (resultCanvas) resultCanvas.style.display = "";
+
         if (showRes) {
-            const sample = getSample();
-            const key = getTask().resultKey;
-            resultImage.src = sample.results[key];
-            resultImage.alt = taskLabel() + t("result_alt_suffix");
-            setupImageLoading(resultImage, resultImage.closest(".image-container"));
-            renderMetrics(sample.metrics);
+            if (taskId === "bsr") {
+                renderBsrResult();
+            } else {
+                const sample = getSample();
+                const key = getTask().resultKey;
+                resultImage.src = sample.results[key];
+                resultImage.alt = taskLabel() + t("result_alt_suffix");
+                setupImageLoading(resultImage, resultImage.closest(".image-container"));
+                renderMetrics(sample.metrics);
+            }
         }
 
         syncActionButton();
         saveWorkspaceState();
     }
 
+    function renderBsrResult() {
+        // Hide the standard result image, show BSR pipeline instead
+        var resultCanvas = document.querySelector(".result-canvas");
+        if (resultCanvas) resultCanvas.style.display = "none";
+
+        var sample = getSample();
+        if (!sample || !sample.bsr) return;
+
+        var bsr = sample.bsr;
+        var sampleName = typeof nmiGetSampleName === "function" ? nmiGetSampleName(sample) : ("Sample " + (sample.id + 1));
+
+        var fmt = function(v) { return v.toFixed(6); };
+        var fmtScore = function(v) { return v.toFixed(4); };
+
+        var metrics = [
+            { key: "bsr_metric_00", descKey: "bsr_metric_00_desc", raw: bsr.bsr00, norm: bsr.bsr00Norm, weight: 2, wClass: "bsr-metric-card--w2" },
+            { key: "bsr_metric_onoff", descKey: "bsr_metric_onoff_desc", raw: bsr.bsrOnoff, norm: bsr.bsrOnoffNorm, weight: 1, wClass: "bsr-metric-card--w1" },
+            { key: "bsr_metric_diff", descKey: "bsr_metric_diff_desc", raw: bsr.bsrDiff, norm: bsr.bsrDiffNorm, weight: 1, wClass: "bsr-metric-card--w1" },
+        ];
+
+        function buildMetricCard(m, value, metaKey) {
+            return '<div class="bsr-metric-card ' + m.wClass + '">' +
+                '<span class="bsr-metric-card__label">' + escapeHtml(t(m.key)) + '</span>' +
+                '<span class="bsr-metric-card__desc">' + escapeHtml(t(m.descKey)) + '</span>' +
+                '<span class="bsr-metric-card__value">' + fmt(value) + '</span>' +
+                '<span class="bsr-metric-card__meta">' + escapeHtml(t(metaKey)) + '</span>' +
+                '</div>';
+        }
+
+        var rawCards = metrics.map(function(m) { return buildMetricCard(m, m.raw, "bsr_raw"); }).join("");
+        var normCards = metrics.map(function(m) { return buildMetricCard(m, m.norm, "bsr_normalized"); }).join("");
+
+        var formulaTerms = metrics.map(function(m) {
+            return '<span class="bsr-workspace__term">' +
+                '<span class="bsr-workspace__term-weight ' + (m.weight === 2 ? 'bsr-workspace__term-weight--w2' : 'bsr-workspace__term-weight--w1') + '">×' + m.weight + '</span>' +
+                '<span class="bsr-workspace__term-value">' + fmt(m.norm) + '</span>' +
+                '</span>';
+        }).join("");
+
+        var termsBreakdown = metrics.map(function(m) {
+            var result = m.weight * m.norm;
+            var sign = m.weight === 2 ? "2 × " + fmt(m.norm) : (m.norm < 0 ? "1 × (" + fmt(m.norm) + ")" : "1 × " + fmt(m.norm));
+            return sign + " = " + fmt(result);
+        }).join("\n");
+
+        var formulaHtml =
+            '<div class="bsr-workspace__formula-wrap">' +
+            '<div class="bsr-workspace__equation">' +
+            escapeHtml(t("bsr_formula_expr")) +
+            '</div>' +
+            '<div class="bsr-workspace__terms">' + formulaTerms + '</div>' +
+            '<div class="bsr-workspace__breakdown">' +
+            termsBreakdown.replace(/\n/g, '<br>') + '<br>' +
+            '<strong>' + escapeHtml(t("bsr_final_score")) + ' = ' + fmtScore(bsr.bsrScore) + '</strong>' +
+            '</div>' +
+            '</div>';
+
+        var conn = '<div class="bsr-connector" aria-hidden="true"></div>';
+
+        var bsrIcon = '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">' +
+            '<path d="M16 4v4m0 16v4M4 16h4m16 0h4M8.5 8.5l2.8 2.8m9.4 9.4l2.8 2.8M23.5 8.5l-2.8 2.8m-9.4 9.4l-2.8 2.8"/>' +
+            '<circle cx="16" cy="16" r="5"/></svg>';
+
+        resultMetrics.innerHTML =
+            '<div class="bsr-workspace">' +
+            // Top bar with sample name + quick score
+            '<div class="bsr-workspace__top">' +
+            '<div class="bsr-workspace__top-left">' +
+            '<span class="bsr-workspace__top-icon" aria-hidden="true">' + bsrIcon + '</span>' +
+            '<span class="bsr-workspace__top-name">' + escapeHtml(sampleName) + '</span>' +
+            '</div>' +
+            '<span class="bsr-workspace__top-score">' + fmtScore(bsr.bsrScore) + '</span>' +
+            '</div>' +
+            // Stage 1: Raw metrics
+            conn +
+            '<div class="bsr-workspace__stage">' +
+            '<div class="bsr-workspace__stage-head">' +
+            '<span class="bsr-step-badge">1</span>' +
+            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_raw_metrics")) + '</span>' +
+            '</div>' +
+            '<div class="bsr-metrics-row">' + rawCards + '</div>' +
+            '</div>' +
+            // Stage 2: Normalized
+            conn +
+            '<div class="bsr-workspace__stage">' +
+            '<div class="bsr-workspace__stage-head">' +
+            '<span class="bsr-step-badge">2</span>' +
+            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_norm_metrics")) + '</span>' +
+            '</div>' +
+            '<div class="bsr-metrics-row">' + normCards + '</div>' +
+            '</div>' +
+            // Stage 3: Formula
+            conn +
+            '<div class="bsr-workspace__stage">' +
+            '<div class="bsr-workspace__stage-head">' +
+            '<span class="bsr-step-badge">3</span>' +
+            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_formula_title")) + '</span>' +
+            '</div>' +
+            formulaHtml +
+            '</div>' +
+            // Stage 4: Final score
+            conn +
+            '<div class="bsr-workspace__stage">' +
+            '<div class="bsr-workspace__stage-head">' +
+            '<span class="bsr-step-badge">4</span>' +
+            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_final_score")) + '</span>' +
+            '</div>' +
+            '<div class="bsr-workspace__final">' +
+            '<span class="bsr-workspace__score-badge">' + fmtScore(bsr.bsrScore) + '</span>' +
+            '<span class="bsr-workspace__score-label">BSR Score</span>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    }
+
     function syncActionButton() {
         if (phase === "empty") {
-            actionBtn.textContent = t("btn_preprocess");
+            actionBtn.textContent = taskId === "bsr" ? t("btn_view_bsr") : t("btn_preprocess");
             actionBtn.disabled = false;
             actionBtn.classList.remove("btn-secondary");
             actionBtn.classList.add("btn-primary");
@@ -348,6 +477,10 @@
             [t("m_bnd"), NMI_i18n.statusDisplay(m.bendStatus)],
         ];
 
+        if (sample.bsr) {
+            rows.push([t("m_bsr_score"), sample.bsr.bsrScore.toFixed(4)]);
+        }
+
         const csvContent = rows.map(row =>
             row.map(cell => {
                 const s = String(cell);
@@ -370,7 +503,7 @@
     function exportAllCSV() {
         const tFn = window.NMI_i18n && NMI_i18n.t || (k => k);
         const sd = window.NMI_i18n && NMI_i18n.statusDisplay || (s => s);
-        const rows = [[tFn("sample_label"), tFn("m_bead_n"), tFn("m_bead_s"), tFn("m_cep_n"), tFn("m_cep_s"), tFn("m_ade_n"), tFn("m_ade_s"), tFn("m_dend"), tFn("m_brk"), tFn("m_arb"), tFn("m_bnd")]];
+        const rows = [[tFn("sample_label"), tFn("m_bead_n"), tFn("m_bead_s"), tFn("m_cep_n"), tFn("m_cep_s"), tFn("m_ade_n"), tFn("m_ade_s"), tFn("m_dend"), tFn("m_brk"), tFn("m_arb"), tFn("m_bnd"), tFn("m_bsr_score")]];
 
         NMI_SAMPLES.forEach(function(s) {
             const name = typeof nmiGetSampleName === "function" ? nmiGetSampleName(s) : (s.name || "Sample " + (s.id + 1));
@@ -382,6 +515,7 @@
                 String(m.adeCount), m.adeSize.toFixed(1),
                 m.dendriteLength.toFixed(1),
                 sd(m.breakStatus), sd(m.arborizationStatus), sd(m.bendStatus),
+                s.bsr ? s.bsr.bsrScore.toFixed(4) : "",
             ]);
         });
 

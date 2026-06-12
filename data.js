@@ -42,6 +42,15 @@ const NMI_SAMPLES = [
             arborizationStatus: "检测到增生",
             bendStatus: "正常",
         },
+        bsr: {
+            bsr00: 0.051605964,
+            bsr00Norm: 0.03982719,
+            bsrOnoff: 0.822753906,
+            bsrOnoffNorm: 0.459114779,
+            bsrDiff: -0.102539063,
+            bsrDiffNorm: 0.524679245,
+            bsrScore: 1.063448404,
+        },
     },
     {
         id: 1,
@@ -73,6 +82,15 @@ const NMI_SAMPLES = [
             breakStatus: "正常",
             arborizationStatus: "正常",
             bendStatus: "正常",
+        },
+        bsr: {
+            bsr00: 0.098165744,
+            bsr00Norm: 0.088011157,
+            bsrOnoff: 0.988769531,
+            bsrOnoffNorm: 0.714178545,
+            bsrDiff: -0.015167236,
+            bsrDiffNorm: 0.740754717,
+            bsrScore: 1.630955576,
         },
     },
     {
@@ -106,6 +124,15 @@ const NMI_SAMPLES = [
             arborizationStatus: "正常",
             bendStatus: "正常",
         },
+        bsr: {
+            bsr00: 0.037082023,
+            bsr00Norm: 0.024796597,
+            bsrOnoff: 0.740722656,
+            bsrOnoffNorm: 0.333083271,
+            bsrDiff: -0.166625977,
+            bsrDiffNorm: 0.366188679,
+            bsrScore: 0.748865143,
+        },
     },
     {
         id: 3,
@@ -137,6 +164,15 @@ const NMI_SAMPLES = [
             breakStatus: "正常",
             arborizationStatus: "正常",
             bendStatus: "正常",
+        },
+        bsr: {
+            bsr00: 0.056288198,
+            bsr00Norm: 0.044672758,
+            bsrOnoff: 0.895996094,
+            bsrOnoffNorm: 0.571642911,
+            bsrDiff: -0.111572266,
+            bsrDiffNorm: 0.502339623,
+            bsrScore: 1.16332805,
         },
     },
     {
@@ -170,6 +206,15 @@ const NMI_SAMPLES = [
             arborizationStatus: "正常",
             bendStatus: "正常",
         },
+        bsr: {
+            bsr00: 0.159348181,
+            bsr00Norm: 0.151327878,
+            bsrOnoff: 0.834472656,
+            bsrOnoffNorm: 0.47711928,
+            bsrDiff: -0.114807129,
+            bsrDiffNorm: 0.494339623,
+            bsrScore: 1.274114658,
+        },
     },
     {
         id: 5,
@@ -201,6 +246,15 @@ const NMI_SAMPLES = [
             breakStatus: "检测到断裂",
             arborizationStatus: "正常",
             bendStatus: "正常",
+        },
+        bsr: {
+            bsr00: 0.038756194,
+            bsr00Norm: 0.026529169,
+            bsrOnoff: 0.937988281,
+            bsrOnoffNorm: 0.63615904,
+            bsrDiff: -0.040740967,
+            bsrDiffNorm: 0.677509434,
+            bsrScore: 1.366726812,
         },
     },
     {
@@ -234,6 +288,15 @@ const NMI_SAMPLES = [
             arborizationStatus: "正常",
             bendStatus: "正常",
         },
+        bsr: {
+            bsr00: 0.135403478,
+            bsr00Norm: 0.126547889,
+            bsrOnoff: 0.924804688,
+            bsrOnoffNorm: 0.615903976,
+            bsrDiff: -0.076599121,
+            bsrDiffNorm: 0.588830189,
+            bsrScore: 1.457829942,
+        },
     },
     {
         id: 7,
@@ -266,6 +329,15 @@ const NMI_SAMPLES = [
             arborizationStatus: "正常",
             bendStatus: "正常",
         },
+        bsr: {
+            bsr00: 0.06091929,
+            bsr00Norm: 0.049465401,
+            bsrOnoff: 0.822753906,
+            bsrOnoffNorm: 0.459114779,
+            bsrDiff: -0.117431641,
+            bsrDiffNorm: 0.487849057,
+            bsrScore: 1.045894636,
+        },
     },
 ];
 
@@ -274,6 +346,7 @@ const NMI_TASKS = {
     cellbody: { id: "cellbody", label: "细胞体分析", resultKey: "cellbody" },
     dendrite: { id: "dendrite", label: "树突分析", resultKey: "dendrite" },
     morphology: { id: "morphology", label: "形态异常分析", resultKey: "morphology" },
+    bsr: { id: "bsr", label: "BSR 评分", resultKey: null },
 };
 
 /** 首页任务卡顺序与副标题（id 需与 NMI_TASKS 一致） */
@@ -282,9 +355,13 @@ const NMI_TASK_LIST = [
     { id: "cellbody", blurb: "CEP、ADE 细胞体" },
     { id: "dendrite", blurb: "树突长度" },
     { id: "morphology", blurb: "断裂、增生、弯曲" },
+    { id: "bsr", blurb: "BSR 行为学评分计算" },
 ];
 
 function nmiGetPreprocessedSlides(sample, taskId) {
+    // BSR has no preprocessing slides
+    if (taskId === "bsr") return [];
+
     // Bead task uses a 2-step pipeline (crop + HE, no rotate)
     if (taskId === "bead") {
         const t = window.NMI_i18n && window.NMI_i18n.t ? window.NMI_i18n.t : function(k) { return k; };
