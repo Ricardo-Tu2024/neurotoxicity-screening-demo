@@ -10,8 +10,8 @@
         {
             target: '.intro',
             title: {
-                zh: '欢迎使用 NMI 系统',
-                en: 'Welcome to NMI System'
+                zh: '欢迎使用本系统',
+                en: 'Welcome'
             },
             content: {
                 zh: '这是一个基于 AI 的线虫神经毒性筛查系统。让我们快速了解如何使用它。',

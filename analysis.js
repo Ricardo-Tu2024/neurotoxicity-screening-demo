@@ -154,12 +154,6 @@
      * @param options {{ preservePreSlide?: boolean } | undefined} 为 true 时进入预处理阶段不重置翻页索引（用于从 session 恢复或返回）
      */
     function setPhase(next, options) {
-        // BSR has no preprocessing slides — jump directly to result
-        if (taskId === "bsr" && next === "preprocessed") {
-            setPhase("result", options);
-            return;
-        }
-
         var preservePreSlide = options && options.preservePreSlide;
         phase = next;
         const showEmpty = next === "empty";
@@ -169,6 +163,19 @@
         rightEmpty.hidden = !showEmpty;
         rightPreprocessed.hidden = !showPre;
         rightResult.hidden = !showRes;
+
+        // BSR: always show preprocessed image on left, hide preprocessed viewer
+        if (taskId === "bsr") {
+            rightPreprocessed.hidden = true;
+            var bsrSlides = nmiGetPreprocessedSlides(getSample(), "bsr");
+            if (bsrSlides.length > 0) {
+                var lastSlide = bsrSlides[bsrSlides.length - 1];
+                originalImg.src = lastSlide.src;
+                originalImg.alt = lastSlide.label || t("pre_alt");
+            }
+            var lh = document.querySelector(".workspace-pane--left .pane-title");
+            if (lh) lh.textContent = t("pre_alt");
+        }
 
         if (showPre) {
             if (!preservePreSlide) {
@@ -206,39 +213,79 @@
         if (!sample || !sample.bsr) return;
 
         var bsr = sample.bsr;
+        var m = sample.metrics;
         var sampleName = typeof nmiGetSampleName === "function" ? nmiGetSampleName(sample) : ("Sample " + (sample.id + 1));
 
         var fmt = function(v) { return v.toFixed(6); };
+        var fmtSize = function(v) { return v.toFixed(1); };
         var fmtScore = function(v) { return v.toFixed(4); };
 
-        var metrics = [
+        var sd = window.NMI_i18n && NMI_i18n.statusDisplay
+            ? NMI_i18n.statusDisplay.bind(NMI_i18n)
+            : function(s) { return s; };
+
+        var bsrMetrics = [
             { key: "bsr_metric_00", descKey: "bsr_metric_00_desc", raw: bsr.bsr00, norm: bsr.bsr00Norm, weight: 2, wClass: "bsr-metric-card--w2" },
             { key: "bsr_metric_onoff", descKey: "bsr_metric_onoff_desc", raw: bsr.bsrOnoff, norm: bsr.bsrOnoffNorm, weight: 1, wClass: "bsr-metric-card--w1" },
             { key: "bsr_metric_diff", descKey: "bsr_metric_diff_desc", raw: bsr.bsrDiff, norm: bsr.bsrDiffNorm, weight: 1, wClass: "bsr-metric-card--w1" },
         ];
 
-        function buildMetricCard(m, value, metaKey) {
-            return '<div class="bsr-metric-card ' + m.wClass + '">' +
-                '<span class="bsr-metric-card__label">' + escapeHtml(t(m.key)) + '</span>' +
-                '<span class="bsr-metric-card__desc">' + escapeHtml(t(m.descKey)) + '</span>' +
+        function buildMetricCard(bm, value, metaKey) {
+            return '<div class="bsr-metric-card ' + bm.wClass + '">' +
+                '<span class="bsr-metric-card__label">' + escapeHtml(t(bm.key)) + '</span>' +
+                '<span class="bsr-metric-card__desc">' + escapeHtml(t(bm.descKey)) + '</span>' +
                 '<span class="bsr-metric-card__value">' + fmt(value) + '</span>' +
                 '<span class="bsr-metric-card__meta">' + escapeHtml(t(metaKey)) + '</span>' +
                 '</div>';
         }
 
-        var rawCards = metrics.map(function(m) { return buildMetricCard(m, m.raw, "bsr_raw"); }).join("");
-        var normCards = metrics.map(function(m) { return buildMetricCard(m, m.norm, "bsr_normalized"); }).join("");
+        // --- Morphological input cards (10 metrics in 4 category groups) ---
+        function buildMorphRow(labelKey, value, alert) {
+            return '<div class="bsr-morph-card__row">' +
+                '<span class="bsr-morph-card__label">' + escapeHtml(t(labelKey)) + '</span>' +
+                '<span class="bsr-morph-card__value' + (alert ? ' bsr-morph-card__value--alert' : '') + '">' + escapeHtml(String(value)) + '</span>' +
+                '</div>';
+        }
 
-        var formulaTerms = metrics.map(function(m) {
+        function morphCard(accent, titleKey, rowsHtml) {
+            return '<div class="bsr-morph-card bsr-morph-card--' + accent + '">' +
+                '<span class="bsr-morph-card__title">' + escapeHtml(t(titleKey)) + '</span>' +
+                '<div class="bsr-morph-card__body">' + rowsHtml + '</div>' +
+                '</div>';
+        }
+
+        var morphCardsHtml = "";
+        if (m) {
+            var beadRows = buildMorphRow("m_bead_n", m.beadCount) +
+                buildMorphRow("m_bead_s", fmtSize(m.beadSize) + " px²");
+            var somaRows = buildMorphRow("m_cep_n", m.cepCount) +
+                buildMorphRow("m_cep_s", fmtSize(m.cepSize) + " px²") +
+                buildMorphRow("m_ade_n", m.adeCount) +
+                buildMorphRow("m_ade_s", fmtSize(m.adeSize) + " px²");
+            var dendRows = buildMorphRow("m_dend", fmtSize(m.dendriteLength) + " px");
+            var statusRows = buildMorphRow("m_brk", sd(m.breakStatus), m.breakStatus !== "正常") +
+                buildMorphRow("m_arb", sd(m.arborizationStatus), m.arborizationStatus !== "正常") +
+                buildMorphRow("m_bnd", sd(m.bendStatus), m.bendStatus !== "正常");
+
+            morphCardsHtml = morphCard("bead", "task_bead_l", beadRows) +
+                morphCard("soma", "task_cell_l", somaRows) +
+                morphCard("dend", "task_dend_l", dendRows) +
+                morphCard("morph", "task_morph_l", statusRows);
+        }
+
+        var rawCards = bsrMetrics.map(function(bm) { return buildMetricCard(bm, bm.raw, "bsr_raw"); }).join("");
+        var normCards = bsrMetrics.map(function(bm) { return buildMetricCard(bm, bm.norm, "bsr_normalized"); }).join("");
+
+        var formulaTerms = bsrMetrics.map(function(bm) {
             return '<span class="bsr-workspace__term">' +
-                '<span class="bsr-workspace__term-weight ' + (m.weight === 2 ? 'bsr-workspace__term-weight--w2' : 'bsr-workspace__term-weight--w1') + '">×' + m.weight + '</span>' +
-                '<span class="bsr-workspace__term-value">' + fmt(m.norm) + '</span>' +
+                '<span class="bsr-workspace__term-weight ' + (bm.weight === 2 ? 'bsr-workspace__term-weight--w2' : 'bsr-workspace__term-weight--w1') + '">×' + bm.weight + '</span>' +
+                '<span class="bsr-workspace__term-value">' + fmt(bm.norm) + '</span>' +
                 '</span>';
         }).join("");
 
-        var termsBreakdown = metrics.map(function(m) {
-            var result = m.weight * m.norm;
-            var sign = m.weight === 2 ? "2 × " + fmt(m.norm) : (m.norm < 0 ? "1 × (" + fmt(m.norm) + ")" : "1 × " + fmt(m.norm));
+        var termsBreakdown = bsrMetrics.map(function(bm) {
+            var result = bm.weight * bm.norm;
+            var sign = bm.weight === 2 ? "2 × " + fmt(bm.norm) : ("1 × " + fmt(bm.norm));
             return sign + " = " + fmt(result);
         }).join("\n");
 
@@ -270,38 +317,54 @@
             '</div>' +
             '<span class="bsr-workspace__top-score">' + fmtScore(bsr.bsrScore) + '</span>' +
             '</div>' +
-            // Stage 1: Raw metrics
+            // Stage 1: Morphological input features (10 metrics)
             conn +
             '<div class="bsr-workspace__stage">' +
             '<div class="bsr-workspace__stage-head">' +
             '<span class="bsr-step-badge">1</span>' +
-            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_raw_metrics")) + '</span>' +
+            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_stage_morph_input")) + '</span>' +
             '</div>' +
-            '<div class="bsr-metrics-row">' + rawCards + '</div>' +
+            '<p class="bsr-workspace__stage-desc">' + escapeHtml(t("bsr_morph_desc")) + '</p>' +
+            '<div class="bsr-morph-grid">' + morphCardsHtml + '</div>' +
             '</div>' +
-            // Stage 2: Normalized
+            // Transition: morphology → behavioral prediction
+            conn +
+            '<div class="bsr-workspace__transition">' +
+            '<span class="bsr-workspace__transition-label">' + escapeHtml(t("bsr_stage_bsr_predict")) + '</span>' +
+            '<span class="bsr-workspace__transition-desc">' + escapeHtml(t("bsr_predict_desc")) + '</span>' +
+            '</div>' +
+            // Stage 2: Raw BSR metrics
             conn +
             '<div class="bsr-workspace__stage">' +
             '<div class="bsr-workspace__stage-head">' +
             '<span class="bsr-step-badge">2</span>' +
-            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_norm_metrics")) + '</span>' +
+            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_raw_metrics")) + '</span>' +
             '</div>' +
-            '<div class="bsr-metrics-row">' + normCards + '</div>' +
+            '<div class="bsr-metrics-row">' + rawCards + '</div>' +
             '</div>' +
-            // Stage 3: Formula
+            // Stage 3: Normalized
             conn +
             '<div class="bsr-workspace__stage">' +
             '<div class="bsr-workspace__stage-head">' +
             '<span class="bsr-step-badge">3</span>' +
-            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_formula_title")) + '</span>' +
+            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_norm_metrics")) + '</span>' +
             '</div>' +
-            formulaHtml +
+            '<div class="bsr-metrics-row">' + normCards + '</div>' +
             '</div>' +
-            // Stage 4: Final score
+            // Stage 4: Formula
             conn +
             '<div class="bsr-workspace__stage">' +
             '<div class="bsr-workspace__stage-head">' +
             '<span class="bsr-step-badge">4</span>' +
+            '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_formula_title")) + '</span>' +
+            '</div>' +
+            formulaHtml +
+            '</div>' +
+            // Stage 5: Final score
+            conn +
+            '<div class="bsr-workspace__stage">' +
+            '<div class="bsr-workspace__stage-head">' +
+            '<span class="bsr-step-badge">5</span>' +
             '<span class="bsr-workspace__stage-title">' + escapeHtml(t("bsr_final_score")) + '</span>' +
             '</div>' +
             '<div class="bsr-workspace__final">' +
@@ -314,7 +377,7 @@
 
     function syncActionButton() {
         if (phase === "empty") {
-            actionBtn.textContent = taskId === "bsr" ? t("btn_view_bsr") : t("btn_preprocess");
+            actionBtn.textContent = taskId === "bsr" ? t("btn_result") : t("btn_preprocess");
             actionBtn.disabled = false;
             actionBtn.classList.remove("btn-secondary");
             actionBtn.classList.add("btn-primary");
@@ -493,7 +556,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "NMI_" + sampleName + "_" + taskId + "_" + new Date().toISOString().slice(0, 10) + ".csv";
+        a.download = "results_" + sampleName + "_" + taskId + "_" + new Date().toISOString().slice(0, 10) + ".csv";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -531,7 +594,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "NMI_all_samples_" + new Date().toISOString().slice(0, 10) + ".csv";
+        a.download = "results_all_samples_" + new Date().toISOString().slice(0, 10) + ".csv";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -548,18 +611,27 @@
         if (phase === "preprocessed") {
             setPhase("empty");
         } else if (phase === "result") {
-            setPhase("preprocessed");
+            setPhase(taskId === "bsr" ? "empty" : "preprocessed");
         }
     }
 
     function onActionClick() {
         if (phase === "empty") {
-            actionBtn.disabled = true;
-            actionBtn.textContent = t("btn_generating");
-            syncActionButton();
-            window.setTimeout(function () {
-                setPhase("preprocessed");
-            }, 800);
+            if (taskId === "bsr") {
+                actionBtn.disabled = true;
+                actionBtn.textContent = t("btn_resulting");
+                syncActionButton();
+                window.setTimeout(function () {
+                    setPhase("result");
+                }, 1000);
+            } else {
+                actionBtn.disabled = true;
+                actionBtn.textContent = t("btn_generating");
+                syncActionButton();
+                window.setTimeout(function () {
+                    setPhase("preprocessed");
+                }, 800);
+            }
         } else if (phase === "preprocessed") {
             actionBtn.disabled = true;
             actionBtn.textContent = t("btn_resulting");
@@ -704,7 +776,7 @@
                         setPhase("empty");
                     } else if (phase === "result") {
                         e.preventDefault();
-                        setPhase("preprocessed");
+                        setPhase(taskId === "bsr" ? "empty" : "preprocessed");
                     }
                     break;
                 case "b":

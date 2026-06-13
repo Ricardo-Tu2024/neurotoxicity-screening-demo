@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>线虫神经毒性筛查系统 - NMI</title>
+    <title>线虫神经毒性筛查系统</title>
     <script src="prefs.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
     <link rel="preload" as="image" href="images/original/sample1.webp" fetchpriority="high">
-    <link rel="stylesheet" href="styles.css?v=12">
+    <link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body>
     <div class="app-shell">
@@ -36,7 +36,6 @@
             <div class="header-orb header-orb--2" aria-hidden="true"></div>
             <div class="header-orb header-orb--3" aria-hidden="true"></div>
             <div class="container header-inner">
-                <p class="eyebrow" data-i18n="header_eyebrow">NMI · 神经形态学分析</p>
                 <h1 data-i18n="home_title">线虫神经毒性筛查系统</h1>
                 <p class="subtitle" data-i18n="home_subtitle">基于秀丽隐杆线虫（C. elegans）多巴胺能神经元的高通量神经毒性筛查</p>
             </div>
@@ -138,25 +137,6 @@
                     <div class="bsr-correlation">
                         <h3 data-i18n="bsr_corr_title">形态学与行为学关联</h3>
                         <p data-i18n="bsr_corr_desc">本系统通过多模态深度学习框架，将神经元形态学特征（串珠、细胞体、树突等）与 BSR 行为学评分相关联，实现从结构到功能的预测，为神经毒性评估提供可解释的 AI 工具。</p>
-                    </div>
-
-                    <div class="bsr-demo">
-                        <div class="bsr-demo__head">
-                            <h3 data-i18n="bsr_demo_title">BSR 计算演示</h3>
-                            <p class="section-lead bsr-demo__lead" data-i18n="bsr_demo_lead">选择一个样本，查看 BSR 评分的完整计算流程：</p>
-                            <div class="bsr-demo__pipeline" id="bsr-pipeline-steps" aria-label="BSR calculation pipeline">
-                                <span class="bsr-pipeline-step" data-i18n="bsr_step_raw">原始指标</span>
-                                <span class="bsr-pipeline-arrow" aria-hidden="true">→</span>
-                                <span class="bsr-pipeline-step" data-i18n="bsr_step_norm">归一化</span>
-                                <span class="bsr-pipeline-arrow" aria-hidden="true">→</span>
-                                <span class="bsr-pipeline-step bsr-pipeline-step--highlight" data-i18n="bsr_step_weight">2:1:1 加权</span>
-                                <span class="bsr-pipeline-arrow" aria-hidden="true">→</span>
-                                <span class="bsr-pipeline-step" data-i18n="bsr_step_score">最终评分</span>
-                            </div>
-                        </div>
-                        <div class="bsr-demo__preview" id="bsr-preview">
-                            <!-- Populated by JS; shows BSR score for selected sample + link to full analysis -->
-                        </div>
                     </div>
                 </div>
             </section>
@@ -264,9 +244,18 @@
                                     ></span
                                 >
                             </button>
+                        </div>
+                        <input type="hidden" id="task-id" name="task" value="" />
+                    </div>
+                    <div class="field-block field-block--bsr">
+                        <div class="field-block-head">
+                            <span class="field-label" data-i18n="bsr_section_title">行为学评分</span>
+                            <span class="field-hint" data-i18n="bsr_section_hint">基于形态学特征预测行为学输出</span>
+                        </div>
+                        <div class="bsr-standalone-picker" role="radiogroup" aria-labelledby="bsr-picker-label">
                             <button
                                 type="button"
-                                class="task-card"
+                                class="task-card task-card--bsr-standalone"
                                 role="radio"
                                 aria-checked="false"
                                 data-task-id="bsr"
@@ -290,7 +279,6 @@
                                 >
                             </button>
                         </div>
-                        <input type="hidden" id="task-id" name="task" value="" />
                     </div>
                     <div class="demo-form-actions">
                         <button type="button" class="btn btn-primary btn-lg" id="start-btn" data-i18n="start">开始</button>
@@ -306,11 +294,11 @@
         </footer>
     </div>
 
-    <script src="i18n.js?v=13"></script>
+    <script src="i18n.js?v=15"></script>
     <script src="tooltip.js?v=2"></script>
     <script src="scroll-reveal.js?v=1"></script>
     <script src="quick-start-guide.js?v=6"></script>
     <script src="data.js?v=16"></script>
-    <script src="home.js?v=16"></script>
+    <script src="home.js?v=19"></script>
 </body>
 </html>

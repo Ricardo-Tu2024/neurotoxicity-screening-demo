@@ -1,4 +1,4 @@
-/* NMI Demo — aligned with NeuroSentinel dark theme (index.css tokens) */
+/* C. elegans Neurotoxicity Screening Demo */
 
 *,
 *::before,
@@ -2424,9 +2424,9 @@ html:not(.dark) .sample-card--selected {
     }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 720px) {
     .task-picker {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 
@@ -2665,6 +2665,48 @@ html:not(.dark) .task-card--selected .task-card__icon {
     }
 }
 
+/* --- Standalone BSR task card (below the image task grid) --- */
+.field-block--bsr {
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.field-block--bsr .field-block-head {
+    margin-bottom: 0.75rem;
+}
+
+.bsr-standalone-picker {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+    .bsr-standalone-picker {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 720px) {
+    .bsr-standalone-picker {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.task-card--bsr-standalone {
+    grid-column: 1;
+}
+
+.task-card--bsr-standalone .task-card__inner {
+    padding: 0.85rem 0.9rem 0.9rem;
+}
+
+.task-card--bsr-standalone .task-card__icon--preview {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* --- Start button --- */
 .demo-form-actions {
     margin-top: 0.5rem;
     display: flex;
@@ -2676,12 +2718,6 @@ html:not(.dark) .task-card--selected .task-card__icon {
     padding: 0.6rem 2.25rem;
     font-size: 1rem;
     letter-spacing: -0.01em;
-}
-
-.btn-sm {
-    min-height: 2rem;
-    padding: 0.3rem 0.85rem;
-    font-size: 0.8125rem;
 }
 
 /* --- 工作区：左右分屏 (analysis.html) --- */
@@ -3255,101 +3291,6 @@ button.back-link {
    BSR — Shared primitives
    ============================================= */
 
-.bsr-demo {
-    margin-top: 1rem;
-    border-top: 1px solid var(--border);
-    padding-top: 1.75rem;
-    position: relative;
-}
-
-.bsr-demo::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg,
-        transparent,
-        var(--primary) 30%,
-        var(--chart-2) 70%,
-        transparent);
-    opacity: 0.3;
-}
-
-.bsr-demo__head { margin-bottom: 1.35rem; }
-
-.bsr-demo__lead {
-    margin-bottom: 0.65rem;
-    font-size: 0.8875rem;
-}
-
-.bsr-demo__head h3 {
-    font-family: "Playfair Display", Georgia, serif;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--foreground);
-    margin-bottom: 0.7rem;
-}
-
-/* Pipeline step chips */
-.bsr-demo__pipeline {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.45rem;
-    font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
-}
-
-.bsr-pipeline-step {
-    display: inline-block;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--muted-foreground);
-    background: linear-gradient(135deg,
-        var(--accent) 0%,
-        color-mix(in oklch, var(--accent) 90%, var(--card)) 100%);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    letter-spacing: -0.01em;
-    white-space: nowrap;
-    transition: all 0.25s ease;
-}
-
-.bsr-pipeline-step:hover {
-    border-color: var(--primary);
-    color: var(--foreground);
-    background: linear-gradient(135deg,
-        color-mix(in oklch, var(--primary) 8%, var(--accent)) 0%,
-        var(--card) 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px oklch(0.55 0.2 250 / 0.12);
-}
-
-.bsr-pipeline-step--highlight {
-    color: var(--primary);
-    background: linear-gradient(135deg,
-        color-mix(in oklch, var(--primary) 14%, var(--accent)) 0%,
-        color-mix(in oklch, var(--primary) 6%, var(--accent)) 100%);
-    border-color: color-mix(in oklch, var(--primary) 30%, var(--border));
-    font-weight: 600;
-}
-
-.bsr-pipeline-step--highlight:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    box-shadow: 0 2px 12px oklch(0.55 0.2 250 / 0.2);
-}
-
-.bsr-pipeline-arrow {
-    font-size: 0.85rem;
-    color: var(--primary);
-    opacity: 0.5;
-    flex-shrink: 0;
-    user-select: none;
-}
-
 /* --- BSR preview compact metric cards (landing page + analysis workspace) --- */
 .bsr-metrics-row {
     display: grid;
@@ -3396,7 +3337,7 @@ button.back-link {
 .bsr-metrics-row .bsr-metric-card--w1::before { background: var(--chart-2); }
 
 .bsr-metric-card__label {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
@@ -3404,7 +3345,7 @@ button.back-link {
 }
 
 .bsr-metric-card__desc {
-    font-size: 0.65rem;
+    font-size: 0.6875rem;
     color: var(--muted-foreground);
     line-height: 1.4;
     opacity: 0.75;
@@ -3420,7 +3361,7 @@ button.back-link {
 }
 
 .bsr-metric-card__meta {
-    font-size: 0.6rem;
+    font-size: 0.6875rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -3437,7 +3378,7 @@ button.back-link {
     height: 1.5rem;
     border-radius: 50%;
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 700;
     background: linear-gradient(135deg,
         var(--primary) 0%,
@@ -3465,94 +3406,6 @@ button.back-link {
         var(--chart-2));
     opacity: 0.35;
     border-radius: 1px;
-}
-
-/* =============================================
-   BSR — Index page preview
-   ============================================= */
-
-.bsr-preview-card {
-    background: linear-gradient(135deg,
-        color-mix(in oklch, var(--primary) 5%, var(--accent)) 0%,
-        var(--card) 100%);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem 1.35rem 1.35rem;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.bsr-preview-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg,
-        var(--primary),
-        var(--chart-2));
-    opacity: 0.5;
-}
-
-.bsr-preview-card:hover {
-    border-color: var(--primary);
-    box-shadow: 0 8px 28px oklch(0.55 0.2 250 / 0.15),
-                0 2px 8px oklch(0 0 0 / 0.05);
-}
-
-.bsr-preview-card__header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem 1rem;
-    margin-bottom: 0.85rem;
-    padding-bottom: 0.7rem;
-    border-bottom: 1px solid var(--border);
-}
-
-.bsr-preview-card__sample {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--foreground);
-}
-
-.bsr-preview-card__score {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.8375rem;
-    color: var(--muted-foreground);
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-
-.bsr-preview-card__score strong {
-    color: var(--primary);
-    font-size: 1.1rem;
-    background: linear-gradient(135deg,
-        color-mix(in oklch, var(--primary) 12%, transparent) 0%,
-        color-mix(in oklch, var(--primary) 4%, transparent) 100%);
-    padding: 0.15rem 0.6rem;
-    border-radius: var(--radius);
-    border: 1px solid color-mix(in oklch, var(--primary) 20%, transparent);
-}
-
-.bsr-preview-card--placeholder {
-    text-align: center;
-    padding: 2rem 1.5rem;
-    background: linear-gradient(135deg,
-        color-mix(in oklch, var(--primary) 3%, var(--accent)) 0%,
-        var(--card) 100%);
-    border-style: dashed;
-}
-
-.bsr-preview-placeholder {
-    font-size: 0.875rem;
-    color: var(--muted-foreground);
-    margin: 0;
-    line-height: 1.6;
 }
 
 /* =============================================
@@ -3633,10 +3486,11 @@ button.back-link {
     animation: bsrStageIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.bsr-workspace__stage:nth-child(3)  { animation-delay: 0.1s; }  /* connector + stage */
-.bsr-workspace__stage:nth-child(5)  { animation-delay: 0.2s; }
-.bsr-workspace__stage:nth-child(7)  { animation-delay: 0.3s; }
-.bsr-workspace__stage:nth-child(9)  { animation-delay: 0.4s; }
+.bsr-workspace__stage:nth-child(3)  { animation-delay: 0.1s; }
+.bsr-workspace__stage:nth-child(7)  { animation-delay: 0.2s; }
+.bsr-workspace__stage:nth-child(9)  { animation-delay: 0.3s; }
+.bsr-workspace__stage:nth-child(11) { animation-delay: 0.4s; }
+.bsr-workspace__stage:nth-child(13) { animation-delay: 0.5s; }
 
 @keyframes bsrStageIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -3651,7 +3505,7 @@ button.back-link {
 }
 
 .bsr-workspace__stage-title {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
@@ -3701,12 +3555,12 @@ button.back-link {
     border-radius: var(--radius);
     padding: 0.35rem 0.6rem;
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
 }
 
 .bsr-workspace__term-weight {
     font-weight: 700;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     padding: 0.12rem 0.35rem;
@@ -3724,7 +3578,7 @@ button.back-link {
 
 .bsr-workspace__breakdown {
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     color: var(--muted-foreground);
     background: var(--card);
     border: 1px solid var(--border);
@@ -3796,7 +3650,7 @@ button.back-link {
 }
 
 .bsr-workspace__score-label {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -3815,6 +3669,99 @@ button.back-link {
     width: 1.5rem;
     height: 1.5rem;
     display: block;
+}
+
+/* --- Morphological input grid (BSR workspace) --- */
+.bsr-workspace__stage-desc {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin: 0 0 0.75rem;
+    line-height: 1.5;
+}
+
+.bsr-morph-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+}
+
+.bsr-morph-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 2px);
+    padding: 0.6rem 0.7rem;
+    border-top: 3px solid var(--border);
+}
+
+.bsr-morph-card--bead { border-top-color: var(--primary); }
+.bsr-morph-card--soma { border-top-color: var(--chart-2); }
+.bsr-morph-card--dend { border-top-color: var(--chart-3); }
+.bsr-morph-card--morph { border-top-color: var(--chart-4); }
+
+.bsr-morph-card__title {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+    margin-bottom: 0.45rem;
+}
+
+.bsr-morph-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.bsr-morph-card__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.bsr-morph-card__label {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.bsr-morph-card__value {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.bsr-morph-card__value--alert {
+    color: var(--destructive);
+    font-weight: 600;
+}
+
+/* --- Transition block (morphology → BSR) --- */
+.bsr-workspace__transition {
+    text-align: center;
+    padding: 0.4rem 0.75rem 0.2rem;
+    opacity: 0;
+    animation: bsrStageIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 0.15s;
+}
+
+.bsr-workspace__transition-label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--primary);
+}
+
+.bsr-workspace__transition-desc {
+    display: block;
+    font-size: 0.6875rem;
+    color: var(--muted-foreground);
+    margin-top: 0.15rem;
+    line-height: 1.4;
 }
 
 /* --- Responsive --- */

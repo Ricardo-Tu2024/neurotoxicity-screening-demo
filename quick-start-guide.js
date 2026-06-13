@@ -7,7 +7,7 @@
         zh: [
             {
                 target: '.intro',
-                title: '欢迎使用 NMI 系统',
+                title: '欢迎使用本系统',
                 content: '这是一个基于 AI 的线虫神经毒性筛查演示系统。让我们快速了解如何使用。',
                 position: 'bottom'
             },
@@ -47,7 +47,7 @@
         en: [
             {
                 target: '.intro',
-                title: 'Welcome to NMI System',
+                title: 'Welcome',
                 content: 'This is an AI-based C. elegans neurotoxicity screening demo. Let\'s quickly learn how to use it.',
                 position: 'bottom'
             },

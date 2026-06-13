@@ -177,7 +177,7 @@
         });
         if (!html) {
             taskPicker.innerHTML =
-                '<p class="sample-picker__fallback">任务列表为空。请检查 data.js 中的 NMI_TASK_LIST 与 NMI_TASKS。</p>';
+                '<p class="sample-picker__fallback">任务列表为空。请检查 data.js 中的 TASK_LIST 与 TASKS。</p>';
             return;
         }
         taskPicker.innerHTML = html;
@@ -192,12 +192,26 @@
         if (taskIdInput.value) selectTask(taskIdInput.value);
     }
 
+    /** Bind click handlers on all task cards site-wide (including standalone BSR card outside .task-picker) */
+    function initAllTaskCards() {
+        var allCards = document.querySelectorAll(".task-card[data-task-id]");
+        allCards.forEach(function (el) {
+            if (el.dataset.taskInitBound) return;
+            el.dataset.taskInitBound = "1";
+            var id = el.getAttribute("data-task-id");
+            if (!id) return;
+            el.addEventListener("click", function () {
+                selectTask(id);
+            });
+        });
+    }
+
     function selectTask(id) {
-        if (!taskPicker || !taskIdInput) return;
+        if (!taskIdInput) return;
         taskIdInput.value = id;
-        const cards = taskPicker.querySelectorAll(".task-card");
+        const cards = document.querySelectorAll(".task-card[data-task-id]");
         cards.forEach(function (el) {
-            const elId = el.getAttribute("data-task-id") || (el.dataset && el.dataset.taskId) || "";
+            const elId = el.getAttribute("data-task-id") || "";
             const on = elId === id;
             el.classList.toggle("task-card--selected", on);
             el.setAttribute("aria-checked", on ? "true" : "false");
@@ -207,6 +221,7 @@
     function boot() {
         initSamplePicker();
         initTaskPicker();
+        initAllTaskCards();
         if (window.NMI_i18n) {
             NMI_i18n.applyDocument();
             document.title = NMI_i18n.t("page_title_home");
@@ -250,109 +265,4 @@
         window.location.href =
             "analysis.html?sample=" + encodeURIComponent(sample) + "&task=" + encodeURIComponent(task);
     });
-
-    /* ---- BSR Calculation Preview ---- */
-    var bsrPreview = document.getElementById("bsr-preview");
-
-    function bsrT() {
-        return (window.NMI_i18n && NMI_i18n.t) || function(k) { return k; };
-    }
-
-    function fmt(v) {
-        return v.toFixed(6);
-    }
-
-    function fmtScore(v) {
-        return v.toFixed(4);
-    }
-
-    function renderBsrPreview() {
-        if (!bsrPreview) return;
-        var raw = sampleIndexInput ? sampleIndexInput.value : "";
-        if (raw === "" || raw === null || raw === undefined) {
-            bsrPreview.innerHTML =
-                '<div class="bsr-preview-card bsr-preview-card--placeholder">' +
-                '<p class="bsr-preview-placeholder" data-i18n="bsr_select_prompt">请先选择一个样本以查看 BSR 评分计算演示。</p>' +
-                '</div>';
-            if (window.NMI_i18n) NMI_i18n.applyElement(bsrPreview);
-            return;
-        }
-        var idx = parseInt(raw, 10);
-        var sample = NMI_SAMPLES[idx];
-        if (!sample || !sample.bsr) return;
-        var bsr = sample.bsr;
-        var t = bsrT();
-        var name = typeof nmiGetSampleName === "function" ? nmiGetSampleName(sample) : ("Sample " + (idx + 1));
-
-        var metrics = [
-            { key: "bsr_metric_00", descKey: "bsr_metric_00_desc", raw: bsr.bsr00, norm: bsr.bsr00Norm, weight: 2, wClass: "bsr-metric-card--w2" },
-            { key: "bsr_metric_onoff", descKey: "bsr_metric_onoff_desc", raw: bsr.bsrOnoff, norm: bsr.bsrOnoffNorm, weight: 1, wClass: "bsr-metric-card--w1" },
-            { key: "bsr_metric_diff", descKey: "bsr_metric_diff_desc", raw: bsr.bsrDiff, norm: bsr.bsrDiffNorm, weight: 1, wClass: "bsr-metric-card--w1" },
-        ];
-
-        var cardsHtml = metrics.map(function(m) {
-            return '<div class="bsr-metric-card ' + m.wClass + '">' +
-                '<span class="bsr-metric-card__label">' + escapeHtml(t(m.key)) + '</span>' +
-                '<span class="bsr-metric-card__desc">' + escapeHtml(t(m.descKey)) + '</span>' +
-                '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:0.25rem;">' +
-                '<span class="bsr-metric-card__value">' + fmt(m.raw) + '</span>' +
-                '<span style="font-size:0.625rem;color:var(--muted-foreground);">→ ' + fmt(m.norm) + '</span>' +
-                '</div>' +
-                '</div>';
-        }).join("");
-
-        bsrPreview.innerHTML =
-            '<div class="bsr-preview-card">' +
-            '<div class="bsr-preview-card__header">' +
-            '<span class="bsr-preview-card__sample">' + escapeHtml(name) + '</span>' +
-            '<span class="bsr-preview-card__score">BSR Score: <strong>' + fmtScore(bsr.bsrScore) + '</strong></span>' +
-            '</div>' +
-            '<div class="bsr-metrics-row" style="margin-bottom:0.85rem;">' + cardsHtml + '</div>' +
-            '<div class="bsr-workspace__formula-wrap">' +
-            '<div class="bsr-workspace__equation" style="font-size:0.75rem;padding:0.5rem 0.75rem;">' +
-            escapeHtml(t("bsr_formula_expr")) +
-            '</div>' +
-            '</div>' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.75rem;gap:0.75rem;">' +
-            '<span style="font-family:JetBrains Mono,monospace;font-size:0.75rem;color:var(--muted-foreground);">' +
-            '2 × ' + fmt(bsr.bsr00Norm) + ' + ' + fmt(bsr.bsrOnoffNorm) + ' + ' + fmt(bsr.bsrDiffNorm) +
-            ' = <strong style="color:var(--primary);">' + fmtScore(bsr.bsrScore) + '</strong>' +
-            '</span>' +
-            '<a class="btn btn-primary btn-sm" id="bsr-start-btn" href="#" style="white-space:nowrap;flex-shrink:0;">' +
-            escapeHtml(t("start")) + ' →' +
-            '</a>' +
-            '</div>' +
-            '</div>';
-
-        // Wire up the start button
-        var btn = document.getElementById("bsr-start-btn");
-        if (btn) {
-            btn.addEventListener("click", function(e) {
-                e.preventDefault();
-                try { sessionStorage.removeItem("nmi-workspace"); } catch (ex) {}
-                window.location.href = "analysis.html?sample=" + encodeURIComponent(idx) + "&task=bsr";
-            });
-        }
-    }
-
-    function initBsrDemo() {
-        if (!bsrPreview) return;
-        renderBsrPreview();
-    }
-
-    // Initialize after boot
-    var _origBoot = boot;
-    boot = function() {
-        _origBoot();
-        initBsrDemo();
-    };
-
-    // Sync BSR preview when sample selection changes
-    if (samplePicker && sampleIndexInput) {
-        var _origSelectSample = selectSample;
-        selectSample = function(i) {
-            _origSelectSample(i);
-            if (bsrPreview) renderBsrPreview();
-        };
-    }
 })();

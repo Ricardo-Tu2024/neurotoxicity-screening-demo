@@ -1,5 +1,5 @@
 /**
- * NMI 演示数据与任务元数据（供 index / analysis 共用）
+ * 演示数据与任务元数据（供 index / analysis 共用）
  * 修改后若浏览器仍显示旧条数：在 index.html / analysis.html 中把 data.js 的 ?v= 改大，或 Ctrl+F5 强刷。
  */
 
@@ -359,8 +359,22 @@ const NMI_TASK_LIST = [
 ];
 
 function nmiGetPreprocessedSlides(sample, taskId) {
-    // BSR has no preprocessing slides
-    if (taskId === "bsr") return [];
+    // BSR uses a 2-step pipeline (crop + rotate, no HE)
+    if (taskId === "bsr") {
+        const t2 = window.NMI_i18n && window.NMI_i18n.t ? window.NMI_i18n.t : function(k) { return k; };
+        const bsrPre = sample.preprocessed;
+        if (Array.isArray(bsrPre) && bsrPre.length >= 2) {
+            return bsrPre.slice(0, 2).map(function(slide) {
+                return { src: slide.src, label: slide.labelKey ? t2(slide.labelKey) : (slide.label || "") };
+            });
+        }
+        if (Array.isArray(bsrPre) && bsrPre.length) {
+            return bsrPre.map(function(slide) {
+                return { src: slide.src, label: slide.labelKey ? t2(slide.labelKey) : (slide.label || "") };
+            });
+        }
+        return [];
+    }
 
     // Bead task uses a 2-step pipeline (crop + HE, no rotate)
     if (taskId === "bead") {

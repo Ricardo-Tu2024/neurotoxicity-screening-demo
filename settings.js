@@ -23,7 +23,7 @@
         }
         syncLangUI();
         if (window.NMI_i18n) {
-            document.title = NMI_i18n.t("settings_title") + " — NMI";
+            document.title = NMI_i18n.t("settings_title");
         }
     }
 
@@ -72,7 +72,7 @@
         syncLangUI();
         if (window.NMI_i18n) {
             NMI_i18n.applyDocument();
-            document.title = NMI_i18n.t("settings_title") + " — NMI";
+            document.title = NMI_i18n.t("settings_title");
         }
 
         var backBtn = document.getElementById("settings-back");
