@@ -2426,25 +2426,11 @@ html:not(.dark) .task-card--selected .task-card__icon {
 }
 
 .bsr-standalone-picker {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-}
-
-@media (min-width: 640px) {
-    .bsr-standalone-picker {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 720px) {
-    .bsr-standalone-picker {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+    max-width: 18rem;
 }
 
 .task-card--bsr-standalone {
-    grid-column: 1;
+    width: 100%;
 }
 
 .task-card--bsr-standalone .task-card__inner {
